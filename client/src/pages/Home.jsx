@@ -1,19 +1,18 @@
-import { useAuth } from "../context/AuthContext";
+import MainLayout from "../layouts/MainLayout";
 
 const Home = () => {
-  const { user } = useAuth();
-
   return (
-    <div className="text-center mt-20">
-      <h1 className="text-3xl font-bold">
-        Clinic Appointment System
-      </h1>
+    <MainLayout>
+      <div className="flex flex-col items-center justify-center py-20">
+        <h1 className="text-5xl font-bold text-blue-600 mb-4">
+          Clinic Appointment System
+        </h1>
 
-      <p className="mt-5">
-        Current User:
-        {user ? user.fullName : " Not Logged In"}
-      </p>
-    </div>
+        <p className="text-gray-600 text-lg">
+          Book appointments easily online
+        </p>
+      </div>
+    </MainLayout>
   );
 };
 

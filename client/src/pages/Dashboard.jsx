@@ -1,44 +1,24 @@
-import { useNavigate } from "react-router-dom";
-
-import axiosInstance from "../api/axios";
+import AppLayout from "../layouts/AppLayout";
 
 import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-
-  const { user, setUser } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await axiosInstance.post("/auth/logout");
-
-      setUser(null);
-
-      navigate("/login");
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
-  };
-
+  const { user } = useAuth();
+console.log(user);
   return (
-    <div className="text-center mt-20">
-      <h1 className="text-3xl font-bold">
-        Dashboard
-      </h1>
+    <AppLayout>
+      <div className="bg-white p-8 rounded-2xl shadow-md">
+        <h1 className="text-4xl font-bold text-blue-600 mb-4">
+          Dashboard
+        </h1>
 
-      <p className="mt-5">
-        Welcome,
-        {user?.fullName}
-      </p>
-
-      <button
-        onClick={handleLogout}
-        className="mt-8 bg-red-500 text-white px-5 py-3 rounded"
-      >
-        Logout
-      </button>
-    </div>
+        <p className="text-lg text-gray-700">
+          Welcome back,
+          {" "}
+          {user?.fullName}
+        </p>
+      </div>
+    </AppLayout>
   );
 };
 
