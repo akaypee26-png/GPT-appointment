@@ -182,26 +182,52 @@ const handleReschedule =
                       }
                     </p>
 
-                    <p>
-                      Status:
-                      {" "}
-                      <span className="font-semibold">
-                        {
-                          appointment.status
-                        }
-                      </span>
-                    </p>
+                    {appointment.doctorNotes && (
+  <div className="mt-4 bg-purple-50 border border-purple-200 rounded-xl p-4">
+    <h3 className="font-bold text-purple-700 mb-2">
+      Doctor Notes
+    </h3>
+
+    <p className="text-gray-700 whitespace-pre-wrap">
+      {appointment.doctorNotes}
+    </p>
+  </div>
+)}
+
+      <p className="mt-2">
+  Status:
+
+  <span
+    className={`ml-2 px-3 py-1 rounded-full text-white text-sm ${
+      appointment.status ===
+      "booked"
+        ? "bg-green-500"
+        : appointment.status ===
+          "cancelled"
+        ? "bg-red-500"
+        : "bg-purple-500"
+    }`}
+  >
+    {appointment.status}
+  </span>
+</p>
                   </div>
 
                  {appointment.status ===
   "booked" && (
   <div className="flex gap-3">
     <button
-      onClick={() =>
-        setSelectedAppointment(
-          appointment
-        )
-      }
+     onClick={() => {
+  setSelectedAppointment(
+    appointment
+  );
+
+  setSelectedSlot(null);
+
+  setAvailableSlots([]);
+
+  setNewDate("");
+}}
       className="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600"
     >
       Reschedule
@@ -225,67 +251,79 @@ const handleReschedule =
           )}
         </div>
 
-        
-{selectedAppointment && (
-  <div className="bg-white p-6 rounded-2xl shadow-md mt-10">
-    <h2 className="text-2xl font-bold mb-6 text-blue-600">
-      Reschedule Appointment
-    </h2>
+        {selectedAppointment && (
+  <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+    <div className="bg-white p-8 rounded-2xl shadow-xl w-[700px] max-h-[90vh] overflow-y-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-blue-600">
+          Reschedule Appointment
+        </h2>
 
-    <input
-      type="date"
-      value={newDate}
-      onChange={(e) => {
-        setNewDate(
-          e.target.value
-        );
+        <button
+          onClick={() =>
+            setSelectedAppointment(null)
+          }
+          className="text-red-500 text-xl font-bold"
+        >
+          ✕
+        </button>
+      </div>
 
-        fetchAvailableSlots(
-          e.target.value
-        );
-      }}
-      className="border p-3 rounded-lg mb-6"
-    />
+      <input
+        type="date"
+        value={newDate}
+        onChange={(e) => {
+          setNewDate(
+            e.target.value
+          );
 
-    <div className="grid grid-cols-3 gap-4 mb-6">
-      {availableSlots.map(
-        (slot) => (
-          <button
-            key={
-              slot.startTime
-            }
-            onClick={() =>
-              setSelectedSlot(
-                slot
-              )
-            }
-            className={`p-3 rounded-lg border ${
-              selectedSlot?.startTime ===
-              slot.startTime
-                ? "bg-blue-600 text-white"
-                : ""
-            }`}
-          >
-            {slot.startTime}
-            {" "}
-            -
-            {" "}
-            {slot.endTime}
-          </button>
-        )
+          fetchAvailableSlots(
+            e.target.value
+          );
+        }}
+        className="border p-3 rounded-lg mb-6 w-full"
+      />
+
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        {availableSlots.map(
+          (slot) => (
+            <button
+              key={
+                slot.startTime
+              }
+              onClick={() =>
+                setSelectedSlot(
+                  slot
+                )
+              }
+              className={`p-3 rounded-lg border ${
+                selectedSlot?.startTime ===
+                slot.startTime
+                  ? "bg-blue-600 text-white"
+                  : ""
+              }`}
+            >
+              {slot.startTime}
+              {" "}
+              -
+              {" "}
+              {slot.endTime}
+            </button>
+          )
+        )}
+      </div>
+
+      {selectedSlot && (
+        <button
+          onClick={
+            handleReschedule
+          }
+          className="bg-green-600 text-white px-6 py-3 rounded-lg"
+        >
+          Confirm Reschedule
+        </button>
       )}
     </div>
-
-    {selectedSlot && (
-      <button
-        onClick={
-          handleReschedule
-        }
-        className="bg-green-600 text-white px-6 py-3 rounded-lg"
-      >
-        Confirm Reschedule
-      </button>
-    )}
   </div>
 )}
 

@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 import AdminRoute from "./routes/AdminRoute";
 import AdminAppointments from "./pages/AdminAppointments";
+import BlockSchedule from "./pages/BlockSchedule";
 const App = () => {
   return (
     <Routes>
@@ -33,6 +34,8 @@ const App = () => {
       <Route path="/admin" element={ <AdminRoute> <AdminDashboard /> </AdminRoute> } />
 
       <Route path="/admin/appointments" element={ <AdminRoute> <AdminAppointments /> </AdminRoute> } />
+
+      <Route path="/admin/block-schedule" element={ <AdminRoute> <BlockSchedule /> </AdminRoute> } />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
