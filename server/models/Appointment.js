@@ -66,6 +66,11 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    doctorNotes: {
+  type: String,
+  default: "",
+},
   },
   {
     timestamps: true,

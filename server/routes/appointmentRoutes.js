@@ -11,6 +11,8 @@ const {
    adminCancelAppointment,
    blockSchedule,
    getDashboardStats,
+   addDoctorNotes,
+   completeAppointment,
 } = require("../controllers/appointmentController");
 
 
@@ -42,5 +44,9 @@ router.put("/admin/cancel/:id", protect, adminOnly, adminCancelAppointment);
 router.post("/admin/block-schedule", protect, adminOnly, blockSchedule);
 
 router.get("/admin/dashboard-stats", protect, adminOnly, getDashboardStats);
+
+router.put("/admin/doctor-notes/:id", protect, adminOnly, addDoctorNotes);
+
+router.put("/admin/complete/:id", protect, adminOnly, completeAppointment);
 
     module.exports = router;

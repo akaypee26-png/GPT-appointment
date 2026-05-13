@@ -318,14 +318,21 @@ exports.rescheduleAppointment = async (req, res) => {
       });
     }
 
-    if (
-      appointment.patient.toString() !==
-      req.user._id.toString()
-    ) {
-      return res.status(403).json({
-        message: "Unauthorized access",
-      });
-    }
+   const isPatientOwner =
+  appointment.patient.toString() ===
+  req.user._id.toString();
+
+const isAdmin =
+  req.user.role === "admin";
+
+if (
+  !isPatientOwner &&
+  !isAdmin
+) {
+  return res.status(403).json({
+    message: "Unauthorized access",
+  });
+}
 
     if (appointment.status !== "booked") {
       return res.status(400).json({
@@ -656,3 +663,99 @@ exports.getDashboardStats = async (
     });
   }
 };
+
+exports.addDoctorNotes = async (
+  req,
+  res
+) => {
+  try {
+    const { id } = req.params;
+
+    const { doctorNotes } =
+      req.body;
+
+    const appointment =
+      await Appointment.findById(id);
+
+    if (!appointment) {
+      return res.status(404).json({
+        message:
+          "Appointment not found",
+      });
+    }
+
+    appointment.doctorNotes =
+      doctorNotes;
+
+    await appointment.save();
+
+    await createNotification({
+      recipient:
+        appointment.patient,
+
+      title:
+        "Doctor Notes Added",
+
+      message: `
+Doctor notes were added to your appointment on
+${appointment.appointmentDate}.
+`,
+    });
+
+    res.status(200).json({
+      message:
+        "Doctor notes saved successfully",
+      appointment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+exports.completeAppointment =
+  async (req, res) => {
+    try {
+      const { id } =
+        req.params;
+
+      const appointment =
+        await Appointment.findById(id);
+
+      if (!appointment) {
+        return res.status(404).json({
+          message:
+            "Appointment not found",
+        });
+      }
+
+      appointment.status =
+        "completed";
+
+      await appointment.save();
+
+      await createNotification({
+        recipient:
+          appointment.patient,
+
+        title:
+          "Appointment Completed",
+
+        message: `
+Your appointment on
+${appointment.appointmentDate}
+has been marked completed.
+`,
+      });
+
+      res.status(200).json({
+        message:
+          "Appointment marked as completed",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
