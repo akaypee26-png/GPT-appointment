@@ -36,7 +36,7 @@ const handleSubmit = async (e) => {
 
     navigate("/dashboard");
   } catch (error) {
-    console.log(error.response.data.message);
+  toast.success(response.data.message);
   }
 };
 

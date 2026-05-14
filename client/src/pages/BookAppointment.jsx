@@ -7,8 +7,15 @@ import {
 import axiosInstance from "../api/axios";
 
 import AppLayout from "../layouts/AppLayout";
+import toast from "react-hot-toast";
+
 
 const BookAppointment = () => {
+
+  const [loading,
+  setLoading] =
+  useState(false);
+
   const [date, setDate] =
     useState("");
 
@@ -30,7 +37,7 @@ const BookAppointment = () => {
 
       setSlots(response.data);
     } catch (error) {
-      console.log(
+      toast.error(
         error.response.data.message
       );
     }
@@ -44,6 +51,7 @@ const BookAppointment = () => {
 
   const handleBookAppointment =
     async () => {
+      setLoading(true);
       try {
         const response =
           await axiosInstance.post(
@@ -62,17 +70,15 @@ const BookAppointment = () => {
             }
           );
 
-        alert(
-          response.data.message
-        );
+        toast.success(response.data.message);
 
         setSelectedSlot(null);
 
         fetchSlots();
       } catch (error) {
-        console.log(
-          error.response.data.message
-        );
+        toast.error(error.response.data.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -91,7 +97,7 @@ const BookAppointment = () => {
               e.target.value
             )
           }
-          className="border p-3 rounded-lg mb-8"
+         className="border p-3 rounded-lg mb-8"
         />
 
         <div className="grid grid-cols-3 gap-4">
@@ -134,13 +140,18 @@ const BookAppointment = () => {
               className="w-full border p-4 rounded-lg mb-4"
             />
 
-            <button
+            <button  disabled={
+  loading ||
+  !selectedSlot
+}
               onClick={
                 handleBookAppointment
               }
-              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700"
+              className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50"
             >
-              Confirm Booking
+              {loading
+  ? "Booking..."
+  : "Book Appointment"}
             </button>
           </div>
         )}

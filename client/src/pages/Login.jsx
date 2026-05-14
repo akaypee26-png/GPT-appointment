@@ -6,10 +6,16 @@ import axiosInstance from "../api/axios";
 
 import { useAuth } from "../context/AuthContext";
 
+import toast from "react-hot-toast";
+
 const Login = () => {
   const navigate = useNavigate();
 
   const { setUser } = useAuth();
+
+  const [loading,
+  setLoading] =
+  useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -25,7 +31,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+setLoading(true);
     try {
       const response = await axiosInstance.post(
         "/auth/login",
@@ -36,7 +42,13 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (error) {
-      console.log(error.response.data.message);
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message || error.message || "Login failed"
+  );
+}finally {
+      setLoading(false);
     }
   };
 
@@ -68,11 +80,13 @@ const Login = () => {
           className="w-full border p-3 rounded mb-6"
         />
 
-        <button
+        <button disabled={loading}
           type="submit"
-          className="w-full bg-black text-white p-3 rounded"
+          className="w-full bg-black text-white p-3 rounded disabled:opacity-50"
         >
-          Login
+           {loading
+  ? "Logging in..."
+  : "Login"}
         </button>
       </form>
     </div>

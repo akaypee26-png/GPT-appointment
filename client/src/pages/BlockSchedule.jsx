@@ -3,6 +3,7 @@ import { useState } from "react";
 import axiosInstance from "../api/axios";
 
 import AppLayout from "../layouts/AppLayout";
+import toast from "react-hot-toast";
 
 const BlockSchedule = () => {
   const [formData,
@@ -35,9 +36,7 @@ const BlockSchedule = () => {
             formData
           );
 
-        alert(
-          response.data.message
-        );
+        toast.success(response.data.message);
 
         setFormData({
           blockDate: "",
@@ -46,9 +45,7 @@ const BlockSchedule = () => {
           reason: "",
         });
       } catch (error) {
-        alert(
-          error.response.data.message
-        );
+        toast.error(error.response.data.message);
       }
     };
 

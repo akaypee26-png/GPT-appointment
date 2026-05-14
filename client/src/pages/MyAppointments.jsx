@@ -7,6 +7,8 @@ import axiosInstance from "../api/axios";
 
 import AppLayout from "../layouts/AppLayout";
 
+import toast from "react-hot-toast";
+
 const MyAppointments = () => {
   const [appointments, setAppointments] =
     useState([]);
@@ -39,9 +41,7 @@ const [selectedSlot,
           response.data
         );
       } catch (error) {
-        console.log(
-          error.response.data.message
-        );
+        toast.error(error.response.data.message);
       }
     };
 
@@ -61,9 +61,7 @@ const fetchAvailableSlots =
         response.data
       );
     } catch (error) {
-      console.log(
-        error.response.data.message
-      );
+      toast.error(error.response.data.message);
     }
   };
 
@@ -76,15 +74,11 @@ const fetchAvailableSlots =
             `/appointments/cancel/${id}`
           );
 
-        alert(
-          response.data.message
-        );
+        toast.success(response.data.message);
 
         fetchAppointments();
       } catch (error) {
-        console.log(
-          error.response.data.message
-        );
+        toast.error(error.response.data.message);
       }
     };
 
@@ -106,9 +100,7 @@ const handleReschedule =
           }
         );
 
-      alert(
-        response.data.message
-      );
+      toast.success(response.data.message);
 
       setSelectedAppointment(
         null
@@ -120,9 +112,7 @@ const handleReschedule =
 
       fetchAppointments();
     } catch (error) {
-      alert(
-        error.response.data.message
-      );
+      toast.error(error.response.data.message);
     }
   };
 
@@ -133,16 +123,29 @@ const handleReschedule =
           My Appointments
         </h1>
 
-        <div className="grid gap-6">
+{appointments.length === 0 ? (
+  <div className="bg-white p-10 rounded-2xl shadow-md text-center">
+    <h2 className="text-2xl font-bold mb-2">
+      No Appointments Found
+    </h2>
+
+    <p className="text-gray-500">
+      You have not booked any appointments yet.
+    </p>
+  </div>
+) : (
+  <div className="grid gap-6">
+
+        
           {appointments.map(
             (appointment) => (
               <div
                 key={
                   appointment._id
                 }
-                className="bg-white p-6 rounded-2xl shadow-md"
+                className="bg-white p-4 md:p-6 rounded-2xl shadow-md mt-10"
               >
-                <div className="flex justify-between items-start">
+                <div className="flex flex-col lg:flex-row lg:justify-between gap-6">
                   <div>
                     <p className="font-bold text-xl mb-2">
                       Booking ID:
@@ -215,7 +218,7 @@ const handleReschedule =
 
                  {appointment.status ===
   "booked" && (
-  <div className="flex gap-3">
+  <div className="flex flex-col sm:flex-row gap-3">
     <button
      onClick={() => {
   setSelectedAppointment(
@@ -250,7 +253,7 @@ const handleReschedule =
             )
           )}
         </div>
-
+)}
         {selectedAppointment && (
   <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
     <div className="bg-white p-8 rounded-2xl shadow-xl w-[700px] max-h-[90vh] overflow-y-auto">
@@ -284,7 +287,7 @@ const handleReschedule =
         className="border p-3 rounded-lg mb-6 w-full"
       />
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         {availableSlots.map(
           (slot) => (
             <button

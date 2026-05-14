@@ -605,7 +605,7 @@
 // };
 
 // export default AdminAppointments;
-//=====================================================================================================================================================
+//====================================================================================================================================================
 
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axios";
@@ -815,13 +815,27 @@ const AdminAppointments = () => {
         </div>
 
         {/* APPOINTMENTS LIST */}
+
+
+        {currentAppointments.length === 0 ? (
+  <div className="bg-white p-10 rounded-2xl shadow-md text-center">
+    <h2 className="text-2xl font-bold mb-2">
+      No Appointments Found
+    </h2>
+
+    <p className="text-gray-500">
+      No appointments match your filters.
+    </p>
+  </div>
+) : (
+  
         <div className="grid gap-6">
           {currentAppointments.map((appointment) => (
             <div
               key={appointment._id}
               className="bg-white p-6 rounded-2xl shadow-md"
             >
-              <div className="flex justify-between">
+             <div className="flex flex-col lg:flex-row lg:justify-between gap-6">
                 <div>
                   <p className="font-bold text-xl mb-2">
                     {appointment.patient?.fullName}
@@ -850,7 +864,7 @@ const AdminAppointments = () => {
                 </div>
 
                 {appointment.status === "booked" && (
-                  <div className="flex gap-3 h-fit">
+                  <div className="flex flex-col sm:flex-row gap-3 h-fit">
                     <button
                       onClick={() => {
                         setNotesAppointment(appointment);
@@ -876,18 +890,36 @@ const AdminAppointments = () => {
                     </button>
 
                     <button
-                      onClick={() =>
-                        handleComplete(appointment._id)
-                      }
+                     onClick={() => {
+  const confirmComplete =
+    window.confirm(
+      "Mark this appointment as completed?"
+    );
+
+  if (confirmComplete) {
+    handleComplete(
+      appointment._id
+    );
+  }
+}}
                       className="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700"
                     >
                       Complete
                     </button>
 
                     <button
-                      onClick={() =>
-                        handleCancel(appointment._id)
-                      }
+                      onClick={() => {
+  const confirmCancel =
+    window.confirm(
+      "Are you sure you want to cancel this appointment?"
+    );
+
+  if (confirmCancel) {
+    handleCancel(
+      appointment._id
+    );
+  }
+}}
                       className="bg-red-500 text-white px-5 py-3 rounded-lg hover:bg-red-600"
                     >
                       Cancel
@@ -898,12 +930,13 @@ const AdminAppointments = () => {
             </div>
           ))}
         </div>
+)}
       </div>
 
       {/* RESCHEDULE MODAL */}
       {selectedAppointment && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-2xl shadow-xl w-[700px] max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-[95%] md:w-[700px] max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-blue-600">
                 Reschedule Appointment
@@ -927,7 +960,7 @@ const AdminAppointments = () => {
               className="border p-3 rounded-lg mb-6 w-full"
             />
 
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
               {availableSlots.map((slot) => (
                 <button
                   key={slot.startTime}
@@ -983,7 +1016,7 @@ const AdminAppointments = () => {
       {/* DOCTOR NOTES MODAL */}
       {notesAppointment && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-2xl shadow-xl w-[700px]">
+          <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-[95%] md:w-[700px]">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-purple-600">
                 Doctor Notes

@@ -6,7 +6,7 @@ import {
 } from "react";
 
 import axiosInstance from "../api/axios";
-
+import toast from "react-hot-toast";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
 
         setUser(response.data.user);
       } catch (error) {
+        toast.error(error.response.data.message);
         setUser(null);
       } finally {
         setLoading(false);

@@ -1,7 +1,7 @@
 import AppLayout from "../layouts/AppLayout";
 
 import { useAuth } from "../context/AuthContext";
-
+import toast from "react-hot-toast";
 const Dashboard = () => {
   const { user } = useAuth();
 console.log(user);
